@@ -22,6 +22,23 @@ A tiny, fully-featured, zero-dependency JavaScript framework.
 - Obfuscation (`Obfuscator`)
 - Tokenizing parser (`tokenize` / `findModuleSyntax`)
 
+### Installation
+
+Install from GitHub Packages:
+
+```bash
+npm install @tolinsimpson/minibun-algorithms
+```
+
+**Note:** You'll need to authenticate with GitHub Packages. Create a `.npmrc` file in your project root:
+
+```
+@tolinsimpson:registry=https://npm.pkg.github.com
+//npm.pkg.github.com/:_authToken=YOUR_GITHUB_TOKEN
+```
+
+Or set the `GITHUB_TOKEN` environment variable. You can create a Personal Access Token with `read:packages` permission at [GitHub Settings > Developer settings > Personal access tokens](https://github.com/settings/tokens).
+
 ### Usage (ESM)
 
 ```js
@@ -32,8 +49,23 @@ import {
   ModuleSystem,
   Obfuscator,
   Pipeline,
-} from './src/index.js';
+} from '@tolinsimpson/minibun-algorithms';
 ```
+
+### Publishing
+
+This package is published to GitHub Packages. To publish a new version:
+
+1. **Manual Publishing:**
+   ```bash
+   npm login --registry=https://npm.pkg.github.com --scope=@tolinsimpson
+   npm publish
+   ```
+
+2. **Automated Publishing:**
+   - Create a GitHub Release, or
+   - Use the "Publish to GitHub Packages" workflow from the Actions tab
+   - The workflow will automatically build, test, and publish the package
 
 ### Project Structure
 

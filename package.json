@@ -1,5 +1,5 @@
 {
-    "name": "minibun-algorithms",
+    "name": "@tolinsimpson/minibun-algorithms",
     "version": "1.0.0",
     "description": "Pure JavaScript implementations of core JS optimization algorithms.",
     "type": "module",
@@ -19,6 +19,20 @@
         "javascript"
     ],
     "license": "MIT",
+    "author": "Tolin Simpson",
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/TolinSimpson/Minibun.git"
+    },
+    "publishConfig": {
+        "registry": "https://npm.pkg.github.com"
+    },
+    "files": [
+        "src",
+        "dist",
+        "LICENSE",
+        "README.md"
+    ],
     "scripts": {
         "build": "node build.js",
         "build:test": "node build.js --variants",
