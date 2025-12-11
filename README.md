@@ -1,6 +1,19 @@
-## minibun-algorithms
+# Minibun 
 
-Pure JavaScript reference implementations of core JS optimization algorithms:
+A tiny javascript bundler implementation.
+
+---
+
+## Other Projects
+
+### [Minirend](https://github.com/TolinSimpson/Minirend)
+A cross-platform javascript runtime.
+
+### [minima-js](https://github.com/TolinSimpson/minima-js)
+A tiny, fully-featured, zero-dependency JavaScript framework. 
+
+
+## Minibun features: 
 
 - Tree-shaking (`TreeShaker`)
 - Minification (`Minifier`)
