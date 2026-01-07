@@ -1,15 +1,13 @@
 # Minibun - A tiny javascript bundler implementation.
 
-[![Publish to GitHub Packages](https://github.com/TolinSimpson/Minibun/actions/workflows/publish.yml/badge.svg)](https://github.com/TolinSimpson/Minibun/actions/workflows/publish.yml)
-[![Create Release on Version Change](https://github.com/TolinSimpson/Minibun/actions/workflows/release.yml/badge.svg)](https://github.com/TolinSimpson/Minibun/actions/workflows/release.yml)
+[![Publish to GitHub Packages](https://github.com/Minimum-Viable-Web/Minibun/actions/workflows/publish.yml/badge.svg)](https://github.com/Minimum-Viable-Web/Minibun/actions/workflows/publish.yml)
+[![Create Release on Version Change](https://github.com/Minimum-Viable-Web/Minibun/actions/workflows/release.yml/badge.svg)](https://github.com/Minimum-Viable-Web/Minibun/actions/workflows/release.yml)
 
 > ⚠️ **EXPERIMENTAL** – See Scope & limitations
 
 ---
-## The tiny web ecosystem
-### [Minirend](https://github.com/TolinSimpson/minirend) - A tiny cross-platform javascript runtime & web renderer
-### [minima-js](https://github.com/TolinSimpson/minima-js) - A tiny, fully-featured, zero-dependency JavaScript framework. 
-### [LLM Tiny Web](https://github.com/TolinSimpson/LLM-Agent-Tiny-Web-Instructions) - Optimized LLM instructions for writing tiny web code
+## Looking for a tiny web development ecosystem? See:
+### [Minimum Viable Web](https://github.com/Minimum-Viable-Web)
 ---
 
 ## Minibun features: 
@@ -26,13 +24,13 @@
 Install from GitHub Packages:
 
 ```bash
-npm install @tolinsimpson/minibun
+npm install @minimum-viable-web/minibun
 ```
 
 **Note:** You'll need to authenticate with GitHub Packages. Create a `.npmrc` file in your project root:
 
 ```
-@tolinsimpson:registry=https://npm.pkg.github.com
+@minimum-viable-web:registry=https://npm.pkg.github.com
 //npm.pkg.github.com/:_authToken=YOUR_GITHUB_TOKEN
 ```
 
@@ -48,7 +46,7 @@ import {
   ModuleSystem,
   Obfuscator,
   Pipeline,
-} from '@tolinsimpson/minibun';
+} from '@minimum-viable-web/minibun';
 ```
 
 ### Development
@@ -74,7 +72,7 @@ This package is published to GitHub Packages. To publish a new version:
 
 1. **Manual Publishing:**
    ```bash
-   npm login --registry=https://npm.pkg.github.com --scope=@tolinsimpson
+   npm login --registry=https://npm.pkg.github.com --scope=@minimum-viable-web
    npm publish
    ```
 

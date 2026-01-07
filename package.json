@@ -1,6 +1,6 @@
 {
-    "name": "@tolinsimpson/minibun",
-    "version": "1.0.5",
+    "name": "@minimum-viable-web/minibun",
+    "version": "1.0.6",
     "description": "Pure JavaScript implementations of core JS optimization algorithms.",
     "type": "module",
     "main": "src/index.js",
@@ -22,7 +22,7 @@
     "author": "Tolin Simpson",
     "repository": {
         "type": "git",
-        "url": "https://github.com/TolinSimpson/Minibun.git"
+        "url": "https://github.com/Minimum-Viable-Web/Minibun.git"
     },
     "publishConfig": {
         "registry": "https://npm.pkg.github.com"
