@@ -6,8 +6,7 @@
 > ⚠️ **EXPERIMENTAL** – See Scope & limitations
 
 ---
-## Looking for a tiny web development ecosystem? See:
-### [Minimum Viable Web](https://github.com/Minimum-Viable-Web)
+## Looking for a tiny web development ecosystem? See: [Minimum Viable Web](https://github.com/Minimum-Viable-Web)
 ---
 
 ## Minibun features: 
