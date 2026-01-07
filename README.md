@@ -2,6 +2,9 @@
 
 [![Publish to GitHub Packages](https://github.com/Minimum-Viable-Web/Minibun/actions/workflows/publish.yml/badge.svg)](https://github.com/Minimum-Viable-Web/Minibun/actions/workflows/publish.yml)
 [![Create Release on Version Change](https://github.com/Minimum-Viable-Web/Minibun/actions/workflows/release.yml/badge.svg)](https://github.com/Minimum-Viable-Web/Minibun/actions/workflows/release.yml)
+[![GitHub Package](https://img.shields.io/badge/GitHub-Package-blue.svg)](https://github.com/Minimum-Viable-Web/Minibun/packages)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![Zero Dependencies](https://img.shields.io/badge/dependencies-0-green.svg)](https://github.com/Minimum-Viable-Web/Minibun)
 
 > ⚠️ **EXPERIMENTAL** – See Scope & limitations
 

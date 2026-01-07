@@ -1,6 +1,6 @@
 {
     "name": "@minimum-viable-web/minibun",
-    "version": "1.0.6",
+    "version": "1.0.7",
     "description": "Pure JavaScript implementations of core JS optimization algorithms.",
     "type": "module",
     "main": "src/index.js",
