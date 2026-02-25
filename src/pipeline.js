@@ -8,6 +8,7 @@ import { TreeShaker } from './tree-shaking.js';
 import { Minifier } from './minification.js';
 import { Bundler } from './bundling.js';
 import { Obfuscator } from './obfuscation.js';
+import { CSSMinifier } from './css-minification.js';
 
 export class Pipeline {
   constructor(options = {}) {
@@ -77,6 +78,11 @@ export class Pipeline {
     return this;
   }
 
+  useCSSMinifier(options = {}) {
+    this.steps.push({ type: 'minifyCSS', options });
+    return this;
+  }
+
 
   // ---- JSON config integration ----
 
@@ -93,6 +99,7 @@ export class Pipeline {
     if (p.bundle !== false) pipeline.useBundler(p.bundle === true ? {} : p.bundle);
     if (p.minify) pipeline.useMinifier(p.minify === true ? {} : p.minify);
     if (p.obfuscate) pipeline.useObfuscator(p.obfuscate === true ? {} : p.obfuscate);
+    if (p.minifyCSS) pipeline.useCSSMinifier(p.minifyCSS === true ? {} : p.minifyCSS);
 
     // Reasonable default if no steps specified
     if (pipeline.steps.length === 0) {
@@ -127,6 +134,11 @@ export class Pipeline {
         case 'obfuscate': {
           const obfuscator = new Obfuscator(step.options);
           current = obfuscator.obfuscate(String(current));
+          break;
+        }
+        case 'minifyCSS': {
+          const cssMinifier = new CSSMinifier(step.options);
+          current = cssMinifier.minifyCSS(String(current));
           break;
         }
         default:

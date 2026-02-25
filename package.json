@@ -1,6 +1,6 @@
 {
     "name": "@minimum-viable-web/minibun",
-    "version": "1.0.7",
+    "version": "1.1.0",
     "description": "Pure JavaScript implementations of core JS optimization algorithms.",
     "type": "module",
     "main": "src/index.js",
@@ -16,7 +16,8 @@
         "compression",
         "bundler",
         "obfuscation",
-        "javascript"
+        "javascript",
+        "css"
     ],
     "license": "MIT",
     "author": "Tolin Simpson",

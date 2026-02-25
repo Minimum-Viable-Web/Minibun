@@ -15,7 +15,8 @@
 ## Minibun features: 
 
 - Tree-shaking (`TreeShaker`)
-- Minification (`Minifier`)
+- JS Minification (`Minifier`)
+- CSS Minification (`CSSMinifier`)
 - Bundling (`Bundler`)
 - Module system (`ModuleSystem`)
 - Obfuscation (`Obfuscator`)
@@ -44,11 +45,44 @@ Or set the `GITHUB_TOKEN` environment variable. You can create a Personal Access
 import {
   TreeShaker,
   Minifier,
+  CSSMinifier,
   Bundler,
   ModuleSystem,
   Obfuscator,
   Pipeline,
 } from '@minimum-viable-web/minibun';
+```
+
+#### CSS Minification
+
+```js
+import { CSSMinifier } from '@minimum-viable-web/minibun';
+
+const minifier = new CSSMinifier();
+const output = minifier.minifyCSS(`
+  /* Main styles */
+  .card {
+    color: red;
+    padding: 10px;
+  }
+`);
+// Output: ".card{color:red;padding:10px}"
+```
+
+The `CSSMinifier` removes comments, collapses whitespace, strips unnecessary spaces around `{}:;,`, and removes trailing semicolons — while preserving quoted string literals (e.g. `content: "..."`, `url("...")`).
+
+Options:
+- `keepComments: true` — preserve original formatting (no minification)
+
+Pipeline integration:
+
+```js
+const pipeline = new Pipeline({ outputFile: '' })
+  .withModules(modules)
+  .useCSSMinifier();
+
+// Or via JSON config:
+Pipeline.fromJSON({ pipeline: { minifyCSS: true } });
 ```
 
 ### Development
@@ -99,6 +133,7 @@ This package is published to GitHub Packages. To publish a new version:
 
 - Algorithms are implemented with a lightweight **tokenizer**.
 - The tokenizer handles strings, templates, comments, regex literals, and all ES6+ syntax, but there is **no full AST** — tokens are emitted in sequence without expression parsing.
+- CSS minification uses a regex-based approach (no tokenizer needed) that handles standard CSS including `@`-rules, nested blocks, and quoted strings.
 - Suitable for **controlled ES6+ codebases** with static module structure:
   - Only **static `import`/`export`** with literal specifiers (no `import()` dynamic imports).
   - No analysis of runtime-evaluated code (`eval`, `new Function()`, `with`).

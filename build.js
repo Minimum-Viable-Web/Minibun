@@ -24,6 +24,7 @@ const __dirname = path.dirname(__filename);
 const EXPORT_NAMES = [
   'TreeShaker',
   'Minifier',
+  'CSSMinifier',
   'Bundler',
   'ModuleSystem',
   'Obfuscator',
@@ -42,6 +43,7 @@ async function buildSingleFileBundle() {
     'parser.js',
     'tree-shaking.js',
     'minification.js',
+    'css-minification.js',
     'bundling.js',
     'modules.js',
     'obfuscation.js',

@@ -2,6 +2,7 @@
 
 export { TreeShaker } from './tree-shaking.js';
 export { Minifier } from './minification.js';
+export { CSSMinifier } from './css-minification.js';
 export { Bundler } from './bundling.js';
 export { ModuleSystem } from './modules.js';
 export { Obfuscator } from './obfuscation.js';
@@ -12,6 +13,7 @@ if (typeof module !== 'undefined' && module.exports) {
   const exported = {
     TreeShaker: require('./tree-shaking.js').TreeShaker,
     Minifier: require('./minification.js').Minifier,
+    CSSMinifier: require('./css-minification.js').CSSMinifier,
     Bundler: require('./bundling.js').Bundler,
     ModuleSystem: require('./modules.js').ModuleSystem,
     Obfuscator: require('./obfuscation.js').Obfuscator,

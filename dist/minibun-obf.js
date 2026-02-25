@@ -640,6 +640,59 @@ if (typeof module !== '\x75\x6e\x64\x65\x66\x69\x6e\x65\x64' && module.exports) 
 }
 
 
+// ---- css-minification.js ----
+// src/css-minification.js
+// Regex-based CSS minifier: removes comments, collapses whitespace, and strips
+// unnecessary characters while preserving quoted string literals.
+
+export class CSSMinifier {
+  constructor(options = {}) {
+    this.options = {
+      keepComments: false,
+      ...options,
+    };
+  }
+
+  minifyCSS(code) {
+    let css = String(code);
+    if (css.trim() === '') return '';
+
+    if (this.options.keepComments) {
+      return css;
+    }
+
+    // 1) Preserve quoted strings (content: "...", url("..."), etc.)
+    const strings = [];
+    css = css.replace(/(["'])(?:(?!\1|\\).|\\.)*\1/g, (match) => {
+      strings.push(match);
+      return `__CSS_STR_${strings.length - 1}__`;
+    });
+
+    // 2) Remove CSS comments /* ... */
+    css = css.replace(/\/\*[\s\S]*?\*\//g, '');
+
+    // 3) Collapse whitespace to single spaces
+    css = css.replace(/\s+/g, '\x20');
+
+    // 4) Remove spaces around { } : ; ,
+    css = css.replace(/\s*([{}:;,])\s*/g, '\x24\x31');
+
+    // 5) Remove trailing semicolons before }
+    css = css.replace(/;}/g, '\x7d');
+
+    // 6) Restore preserved strings
+    css = css.replace(/__CSS_STR_(\d+)__/g, (_, i) => strings[i]);
+
+    return css.trim();
+  }
+}
+
+// CommonJS export
+if (typeof module !== '\x75\x6e\x64\x65\x66\x69\x6e\x65\x64' && module.exports) {
+  module.exports.CSSMinifier = CSSMinifier;
+}
+
+
 // ---- bundling.js ----
 // src/bundling.js
 // Bundler: builds dependency graph, topologically sorts, concatenates modules
@@ -1138,6 +1191,11 @@ export class Pipeline {
     return this;
   }
 
+  useCSSMinifier(options = {}) {
+    this.steps.push({ type: '\x6d\x69\x6e\x69\x66\x79\x43\x53\x53', options });
+    return this;
+  }
+
 
   // ---- JSON config integration ----
 
@@ -1154,6 +1212,7 @@ export class Pipeline {
     if (p.bundle !== false) pipeline.useBundler(p.bundle === true ? {} : p.bundle);
     if (p.minify) pipeline.useMinifier(p.minify === true ? {} : p.minify);
     if (p.obfuscate) pipeline.useObfuscator(p.obfuscate === true ? {} : p.obfuscate);
+    if (p.minifyCSS) pipeline.useCSSMinifier(p.minifyCSS === true ? {} : p.minifyCSS);
 
     // Reasonable default if no steps specified
     if (pipeline.steps.length === 0) {
@@ -1188,6 +1247,11 @@ export class Pipeline {
         case '\x6f\x62\x66\x75\x73\x63\x61\x74\x65': {
           const obfuscator = new Obfuscator(step.options);
           current = obfuscator.obfuscate(String(current));
+          break;
+        }
+        case '\x6d\x69\x6e\x69\x66\x79\x43\x53\x53': {
+          const cssMinifier = new CSSMinifier(step.options);
+          current = cssMinifier.minifyCSS(String(current));
           break;
         }
         default:
@@ -1247,6 +1311,7 @@ if (typeof module !== '\x75\x6e\x64\x65\x66\x69\x6e\x65\x64' && module.exports) 
   module.exports = {
     TreeShaker,
     Minifier,
+    CSSMinifier,
     Bundler,
     ModuleSystem,
     Obfuscator,
