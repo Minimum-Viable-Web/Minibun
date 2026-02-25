@@ -693,6 +693,90 @@ if (typeof module !== '\x75\x6e\x64\x65\x66\x69\x6e\x65\x64' && module.exports) 
 }
 
 
+// ---- html-minification.js ----
+// src/html-minification.js
+// Regex-based HTML minifier: removes comments, collapses whitespace, shortens
+// boolean attributes, and strips unnecessary quotes while preserving content
+// inside <pre>, <code>, <textarea>, <script>, and <style> blocks.
+
+const BOOLEAN_ATTRS = new Set([
+  '\x61\x6c\x6c\x6f\x77\x66\x75\x6c\x6c\x73\x63\x72\x65\x65\x6e','\x61\x73\x79\x6e\x63','\x61\x75\x74\x6f\x66\x6f\x63\x75\x73','\x61\x75\x74\x6f\x70\x6c\x61\x79','\x63\x68\x65\x63\x6b\x65\x64','\x63\x6f\x6e\x74\x72\x6f\x6c\x73',
+  '\x64\x65\x66\x61\x75\x6c\x74','\x64\x65\x66\x65\x72','\x64\x69\x73\x61\x62\x6c\x65\x64','\x66\x6f\x72\x6d\x6e\x6f\x76\x61\x6c\x69\x64\x61\x74\x65','\x68\x69\x64\x64\x65\x6e','\x69\x6e\x65\x72\x74','\x69\x73\x6d\x61\x70',
+  '\x69\x74\x65\x6d\x73\x63\x6f\x70\x65','\x6c\x6f\x6f\x70','\x6d\x75\x6c\x74\x69\x70\x6c\x65','\x6d\x75\x74\x65\x64','\x6e\x6f\x6d\x6f\x64\x75\x6c\x65','\x6e\x6f\x76\x61\x6c\x69\x64\x61\x74\x65','\x6f\x70\x65\x6e',
+  '\x70\x6c\x61\x79\x73\x69\x6e\x6c\x69\x6e\x65','\x72\x65\x61\x64\x6f\x6e\x6c\x79','\x72\x65\x71\x75\x69\x72\x65\x64','\x72\x65\x76\x65\x72\x73\x65\x64','\x73\x65\x6c\x65\x63\x74\x65\x64',
+]);
+
+export class HTMLMinifier {
+  constructor(options = {}) {
+    this.options = {
+      keepComments: false,
+      collapseBooleanAttributes: true,
+      collapseAttributeQuotes: true,
+      ...options,
+    };
+  }
+
+  minifyHTML(code) {
+    let html = String(code);
+    if (html.trim() === '') return '';
+
+    if (this.options.keepComments) {
+      return html;
+    }
+
+    // 1) Preserve whitespace-sensitive and raw-content blocks via placeholders
+    const preserved = [];
+    const preserve = (match) => {
+      preserved.push(match);
+      return `__HTML_PRE_${preserved.length - 1}__`;
+    };
+
+    html = html.replace(/<(pre|code|textarea)(\s[^>]*)?>[\s\S]*?<\/\1>/gi, preserve);
+    html = html.replace(/<script(\s[^>]*)?>[\s\S]*?<\/script>/gi, preserve);
+    html = html.replace(/<style(\s[^>]*)?>[\s\S]*?<\/style>/gi, preserve);
+
+    // 2) Remove HTML comments (but keep conditional comments <!--[if)
+    html = html.replace(/<!--(?!\[if\s)[\s\S]*?-->/g, '');
+
+    // 3) Collapse whitespace runs to single spaces
+    html = html.replace(/\s+/g, '\x20');
+
+    // 4) Remove spaces between tags: > < → ><
+    html = html.replace(/>\s+</g, '\x3e\x3c');
+
+    // 5) Remove trailing slash on void elements: <br /> → <br>
+    html = html.replace(/<(area|base|br|col|embed|hr|img|input|link|meta|param|source|track|wbr)\b([^>]*?)\s*\/>/gi,
+      '\x3c\x24\x31\x24\x32\x3e');
+
+    // 6) Collapse boolean attributes: disabled="disabled" → disabled
+    if (this.options.collapseBooleanAttributes) {
+      html = html.replace(/(<[a-z][a-z0-9]*\s)([^>]*?)(\w+)="(\3)"([^>]*?>)/gi,
+        (match, open, before, attr, val, after) => {
+          if (BOOLEAN_ATTRS.has(attr.toLowerCase())) {
+            return `${open}${before}${attr}${after}`;
+          }
+          return match;
+        });
+    }
+
+    // 7) Remove quotes from safe single-token attribute values: class="card" → class=card
+    if (this.options.collapseAttributeQuotes) {
+      html = html.replace(/=["']([a-zA-Z0-9_\-.:]+)["']/g, '\x3d\x24\x31');
+    }
+
+    // 8) Restore preserved blocks
+    html = html.replace(/__HTML_PRE_(\d+)__/g, (_, i) => preserved[i]);
+
+    return html.trim();
+  }
+}
+
+// CommonJS export
+if (typeof module !== '\x75\x6e\x64\x65\x66\x69\x6e\x65\x64' && module.exports) {
+  module.exports.HTMLMinifier = HTMLMinifier;
+}
+
+
 // ---- bundling.js ----
 // src/bundling.js
 // Bundler: builds dependency graph, topologically sorts, concatenates modules
@@ -1196,6 +1280,11 @@ export class Pipeline {
     return this;
   }
 
+  useHTMLMinifier(options = {}) {
+    this.steps.push({ type: '\x6d\x69\x6e\x69\x66\x79\x48\x54\x4d\x4c', options });
+    return this;
+  }
+
 
   // ---- JSON config integration ----
 
@@ -1213,6 +1302,7 @@ export class Pipeline {
     if (p.minify) pipeline.useMinifier(p.minify === true ? {} : p.minify);
     if (p.obfuscate) pipeline.useObfuscator(p.obfuscate === true ? {} : p.obfuscate);
     if (p.minifyCSS) pipeline.useCSSMinifier(p.minifyCSS === true ? {} : p.minifyCSS);
+    if (p.minifyHTML) pipeline.useHTMLMinifier(p.minifyHTML === true ? {} : p.minifyHTML);
 
     // Reasonable default if no steps specified
     if (pipeline.steps.length === 0) {
@@ -1252,6 +1342,11 @@ export class Pipeline {
         case '\x6d\x69\x6e\x69\x66\x79\x43\x53\x53': {
           const cssMinifier = new CSSMinifier(step.options);
           current = cssMinifier.minifyCSS(String(current));
+          break;
+        }
+        case '\x6d\x69\x6e\x69\x66\x79\x48\x54\x4d\x4c': {
+          const htmlMinifier = new HTMLMinifier(step.options);
+          current = htmlMinifier.minifyHTML(String(current));
           break;
         }
         default:
@@ -1312,6 +1407,7 @@ if (typeof module !== '\x75\x6e\x64\x65\x66\x69\x6e\x65\x64' && module.exports) 
     TreeShaker,
     Minifier,
     CSSMinifier,
+    HTMLMinifier,
     Bundler,
     ModuleSystem,
     Obfuscator,

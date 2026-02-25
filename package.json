@@ -17,7 +17,8 @@
         "bundler",
         "obfuscation",
         "javascript",
-        "css"
+        "css",
+        "html"
     ],
     "license": "MIT",
     "author": "Tolin Simpson",

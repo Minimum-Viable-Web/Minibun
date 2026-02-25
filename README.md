@@ -17,6 +17,7 @@
 - Tree-shaking (`TreeShaker`)
 - JS Minification (`Minifier`)
 - CSS Minification (`CSSMinifier`)
+- HTML Minification (`HTMLMinifier`)
 - Bundling (`Bundler`)
 - Module system (`ModuleSystem`)
 - Obfuscation (`Obfuscator`)
@@ -46,6 +47,7 @@ import {
   TreeShaker,
   Minifier,
   CSSMinifier,
+  HTMLMinifier,
   Bundler,
   ModuleSystem,
   Obfuscator,
@@ -83,6 +85,40 @@ const pipeline = new Pipeline({ outputFile: '' })
 
 // Or via JSON config:
 Pipeline.fromJSON({ pipeline: { minifyCSS: true } });
+```
+
+#### HTML Minification
+
+```js
+import { HTMLMinifier } from '@minimum-viable-web/minibun';
+
+const minifier = new HTMLMinifier();
+const output = minifier.minifyHTML(`
+  <!-- page header -->
+  <div class="card">
+    <p>  hello  </p>
+    <input disabled="disabled" />
+  </div>
+`);
+// Output: '<div class=card><p> hello </p><input disabled></div>'
+```
+
+The `HTMLMinifier` removes comments, collapses whitespace, strips spaces between tags, collapses boolean attributes (`disabled="disabled"` → `disabled`), removes unnecessary attribute quotes, and removes trailing slashes on void elements — while preserving content inside `<pre>`, `<code>`, `<textarea>`, `<script>`, and `<style>` blocks.
+
+Options:
+- `keepComments: true` — preserve original formatting (no minification)
+- `collapseBooleanAttributes: true` (default) — shorten boolean attributes
+- `collapseAttributeQuotes: true` (default) — remove quotes from safe attribute values
+
+Pipeline integration:
+
+```js
+const pipeline = new Pipeline({ outputFile: '' })
+  .withModules(modules)
+  .useHTMLMinifier();
+
+// Or via JSON config:
+Pipeline.fromJSON({ pipeline: { minifyHTML: true } });
 ```
 
 ### Development
@@ -133,7 +169,7 @@ This package is published to GitHub Packages. To publish a new version:
 
 - Algorithms are implemented with a lightweight **tokenizer**.
 - The tokenizer handles strings, templates, comments, regex literals, and all ES6+ syntax, but there is **no full AST** — tokens are emitted in sequence without expression parsing.
-- CSS minification uses a regex-based approach (no tokenizer needed) that handles standard CSS including `@`-rules, nested blocks, and quoted strings.
+- CSS and HTML minification use regex-based approaches (no tokenizer needed) that handle standard CSS/HTML including `@`-rules, nested blocks, quoted strings, and whitespace-sensitive elements (`<pre>`, `<code>`, `<textarea>`).
 - Suitable for **controlled ES6+ codebases** with static module structure:
   - Only **static `import`/`export`** with literal specifiers (no `import()` dynamic imports).
   - No analysis of runtime-evaluated code (`eval`, `new Function()`, `with`).

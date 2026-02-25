@@ -8,6 +8,9 @@ All notable changes to this project will be documented in this file.
 - **CSS Minification** (`CSSMinifier`) — new zero-dependency CSS minifier that removes comments, collapses whitespace, strips unnecessary characters, and preserves quoted string literals.
 - Pipeline integration: `useCSSMinifier()` fluent method and `minifyCSS` JSON config key.
 - Full test suite for CSS minification (7 test cases).
+- **HTML Minification** (`HTMLMinifier`) — new zero-dependency HTML minifier that removes comments, collapses whitespace, strips spaces between tags, collapses boolean attributes, removes unnecessary attribute quotes, removes trailing slashes on void elements, and preserves `<pre>`, `<code>`, `<textarea>`, `<script>`, and `<style>` content.
+- Pipeline integration: `useHTMLMinifier()` fluent method and `minifyHTML` JSON config key.
+- Full test suite for HTML minification (14 test cases).
 
 ## [1.0.7] - 2025-01-28
 

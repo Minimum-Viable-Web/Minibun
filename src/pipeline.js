@@ -9,6 +9,7 @@ import { Minifier } from './minification.js';
 import { Bundler } from './bundling.js';
 import { Obfuscator } from './obfuscation.js';
 import { CSSMinifier } from './css-minification.js';
+import { HTMLMinifier } from './html-minification.js';
 
 export class Pipeline {
   constructor(options = {}) {
@@ -83,6 +84,11 @@ export class Pipeline {
     return this;
   }
 
+  useHTMLMinifier(options = {}) {
+    this.steps.push({ type: 'minifyHTML', options });
+    return this;
+  }
+
 
   // ---- JSON config integration ----
 
@@ -100,6 +106,7 @@ export class Pipeline {
     if (p.minify) pipeline.useMinifier(p.minify === true ? {} : p.minify);
     if (p.obfuscate) pipeline.useObfuscator(p.obfuscate === true ? {} : p.obfuscate);
     if (p.minifyCSS) pipeline.useCSSMinifier(p.minifyCSS === true ? {} : p.minifyCSS);
+    if (p.minifyHTML) pipeline.useHTMLMinifier(p.minifyHTML === true ? {} : p.minifyHTML);
 
     // Reasonable default if no steps specified
     if (pipeline.steps.length === 0) {
@@ -139,6 +146,11 @@ export class Pipeline {
         case 'minifyCSS': {
           const cssMinifier = new CSSMinifier(step.options);
           current = cssMinifier.minifyCSS(String(current));
+          break;
+        }
+        case 'minifyHTML': {
+          const htmlMinifier = new HTMLMinifier(step.options);
+          current = htmlMinifier.minifyHTML(String(current));
           break;
         }
         default:
